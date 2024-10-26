@@ -68,6 +68,23 @@ def handle_message(event):
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
 
+        if event.message.text == "我不吃牛肉":
+            line_bot_api.reply_message_with_http_info(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[
+                        TextMessage(text='好的，我們將不會提供牛肉給您'),
+                        FlexMessage(
+                            alt_text='功能表',
+                            contents=FlexCarousel.from_json(flex(beef=False))
+                        )
+                    ]
+                )
+            )
+
+
+            return
+
         line_bot_api.reply_message_with_http_info(
             ReplyMessageRequest(
                 reply_token=event.reply_token,
@@ -85,9 +102,10 @@ def handle_message(event):
                             ]
                         )
                     ),
+                    TextMessage(text='請選擇你想吃什麼'),
                     FlexMessage(
                         alt_text='功能表',
-                        contents=FlexCarousel.from_json(flex)
+                        contents=FlexCarousel.from_json(flex())
                     )
                 ]
             )
